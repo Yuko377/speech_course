@@ -4,18 +4,18 @@
 
 ## Course program
 
-- Week 1: [Slides](https://docs.google.com/presentation/d/1Cte6w0t8yTJRFirde6GPxKB29VX3SrX1mhAkKYEN-n4/edit?usp=sharing) | Lecture | Seminar
+- Week 1: [Slides](https://docs.google.com/presentation/d/1Cte6w0t8yTJRFirde6GPxKB29VX3SrX1mhAkKYEN-n4/edit?usp=sharing) | [Lecture](https://disk.yandex.ru/i/E-cGC7pH46UjWQ) | [Seminar](https://disk.yandex.ru/i/j4MsAAliJ5ri_A)
     - Lecture: Intro to Digital Signal Processing (DSP)
     - Seminar: Implement DSP pipeline
     - Homework (5pt): Implement mel-spectrogram transformations
-- Week 2: 
+- Week 2 [Lecture](https://disk.yandex.ru/i/gyROgNpX5LZNZQ) | [Seminar](https://disk.yandex.ru/i/EwrqSMFQHICVRA): 
     - Lecture: Introduction to speech NN discriminative models. Voice Activity Detection (VAD) and Sound Event Detection (SED) tasks
     - Seminar: Train VAD models
     - Homework (15pt): Train SED models
-- Week 3: 
+- Week 3 [Slides](https://docs.google.com/presentation/d/1IppXDfOI2Du5bMfnjxosAgg6Uu0VjXEVRr_8nkUxAus/edit?usp=sharing): 
     - Lecture: Keyword Spotting and Speech Biometrics tasks
     - Seminar: Train Biometrics model and look at embeddings
-    - Homework (20pt): Train Biometrics model to better quality
+    - Homework (20pt): Train Biometrics model ECAPA-TDNN with contrastive loss
 - Week 4:
     - Lecture: Speech Recognition I
     - Seminar: Metrics and augmentations for speech recognition
