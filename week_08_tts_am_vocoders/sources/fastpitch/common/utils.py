@@ -28,9 +28,9 @@ def convert_to_tensor(rows: list[dict], field: str, to_torch_type: Callable[[np.
     return [to_torch_type(r[field]) for r in rows]
 
 
-def pad_tensor_list(tensor_list: list[torch.Tensor]) -> (torch.Tensor, torch.Tensor):
+def pad_tensor_list(tensor_list: list[torch.Tensor], padding_value: int = 0) -> (torch.Tensor, torch.Tensor):
     lengths = torch.LongTensor([tensor.shape[0] for tensor in tensor_list])
-    padded_tensor = torch.nn.utils.rnn.pad_sequence(tensor_list, batch_first=True, padding_value=0)
+    padded_tensor = torch.nn.utils.rnn.pad_sequence(tensor_list, batch_first=True, padding_value=padding_value)
     return padded_tensor, lengths
 
 

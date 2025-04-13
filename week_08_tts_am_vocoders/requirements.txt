@@ -5,8 +5,6 @@ pandas
 praat-parselmouth
 soundfile
 tensorboardX
-torch
-torchaudio
 torchmetrics
 tqdm
 transformers

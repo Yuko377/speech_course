@@ -83,10 +83,11 @@ class SymbolsSet:
         'OY0', 'OY1', 'OY2', 'P', 'R', 'S', 'SH', 'T', 'TH', 'UH0', 'UH1',
         'UH2', 'UW0', 'UW1', 'UW2', 'V', 'W', 'Y', 'Z', 'ZH',
     ]
-    special = ['sil', 'spn']
+    special = ['sil', 'spn', '<PAD>']
     symbols_to_id = {s: i for i, s in enumerate(phonemes + special)}
     id_to_symbols = {i: s for i, s in enumerate(phonemes + special)}
-
+    
+    
     def __call__(self, row) -> list[int]:
         phones = row.utterance['tiers']['phones']['entries']
         phonemes = [p for (_, _, p) in phones]
@@ -274,11 +275,11 @@ class FastPitchBatch(ToDeviceMixin):
 
 
 class TextMelCollate:
-    def __call__(self, batch: list[dict]) -> FastPitchBatch:
+    def __call__(self, batch: list[dict], text_pad_value = SymbolsSet().symbols_to_id['<PAD>']) -> FastPitchBatch:
         to_long_type = lambda x: torch.LongTensor(x)
         to_float_type = lambda x: torch.FloatTensor(x)
         
-        texts, text_lengths = pad_tensor_list(convert_to_tensor(batch, 'symbols_ids', to_long_type))
+        texts, text_lengths = pad_tensor_list(convert_to_tensor(batch, 'symbols_ids', to_long_type), padding_value=text_pad_value)
         pitches, _ = pad_tensor_list(convert_to_tensor(batch, 'pitch', to_float_type))
         durations, _ = pad_tensor_list(convert_to_tensor(batch, 'duration', to_long_type))
 
