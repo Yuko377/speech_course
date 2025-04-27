@@ -83,11 +83,15 @@ class SubDecoder(nn.Module):
         assert B == 1, "Batch size should be 1"
 
         # Your code here
-        raise NotImplementedError("TODO: assignment")
-        # ^^^^^^^^^^^^^^
-
-
-        return codes_sequence
+        emb_seq = embedding.unsqueeze(1)
+        code_seq = torch.zeros(1, 1, 1, dtype=torch.int, device=device)
+        logits = self.forward(emb_seq, code_seq) ## should be [1, 1, 2, self.n_codes]
+        real_code_seq = sampling_fn(logits)[..., :-1] ## now [1, 1, 1] 
+        for _ in range(self.n_codebooks - 1):
+            logits = self.forward(emb_seq, real_code_seq) ## [1, 1, curr_iter + 2, self.n_codes]
+            real_code_seq = sampling_fn(logits)
+            
+        return real_code_seq
 
 
 class EncoderDecoder(nn.Module):
@@ -214,7 +218,7 @@ class TTSTransformer(nn.Module):
         phones_mask, # [B, l]
         codes, # [B, L, N]
         codes_mask, # [B, L]
-        speaker_embs, # [B, ]
+        speaker_embs, # [B, 512]
     ):
         """
         phones: LongTensor of size [batch, phones_len]
@@ -274,8 +278,26 @@ class TTSTransformer(nn.Module):
         device = phones.device
 
         # Your code here
-        raise NotImplementedError("TODO: assignment")
-        # ^^^^^^^^^^^^^^
+        speaker_embs = self.speaker_linear(speaker_embs)
+        codes = torch.full((batch_size, 1, self.subdecoder.n_codebooks), fill_value=start_token, device=device) # [B, 1, N]
+        
+        phones_mask = torch.ones_like(phones, dtype=torch.bool, device=device)
 
-
+        for _ in range(max_size):
+            codes_mask = torch.ones(codes.shape[:2], dtype=torch.bool, device=device)
+            embedding = self.encoder_decoder(
+                phones=phones,
+                phones_mask=phones_mask,
+                codes=codes,
+                codes_mask=codes_mask,
+                speaker_embs=speaker_embs,
+            )[:, -1, :] # should be [B, d]
+            
+            # should be [1, 1, n_codebooks]
+            new_codes = self.subdecoder.autoregressive_sampling(embedding, sampling_fn=sampling_fn)
+            codes = torch.cat([codes, new_codes], dim=1)
+            if end_token in new_codes:
+                break
+                        
+        
         return codes
